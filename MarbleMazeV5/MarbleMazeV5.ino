@@ -181,10 +181,8 @@ void setup() {
 	#endif
 	restAll();
 
-
-
-  // set the printer of the queue.
-//  directionsQueue.setPrinter (Serial);
+	// set the printer of the queue.
+	//  directionsQueue.setPrinter (Serial);
 
 	pinMode(PIXELPIN, OUTPUT);
 	strip.begin(); // This initializes the NeoPixel library.
@@ -207,13 +205,12 @@ void setup() {
 	//pinMode(BLUEORANGESERVO, OUTPUT);
 	
 	for (int i = 0; i < NUM_BUTTONS; i++) {
-    buttons[i].attach( BUTTON_PINS[i] , INPUT_PULLUP  );       //setup the bounce instance for the current button
-    buttons[i].interval(25);              // interval in ms
-    
-  }
+    	buttons[i].attach( BUTTON_PINS[i] , INPUT_PULLUP  );       //setup the bounce instance for the current button
+    	buttons[i].interval(25);              // interval in ms 
+  	}
 
-  // Setup the LED :
-  digitalWrite(LEDPIN, ledState);
+	// Setup the LED :
+	digitalWrite(LEDPIN, ledState);
   
 	push(RED);
 	//updateLEDs();
@@ -273,9 +270,10 @@ void setup() {
     delay(3000);
   }*/
 
+	Watchdog.enable(4000);
+
 	Serial.println("Setup Complete.");
 }
-
 
 
 void loop() {
@@ -286,13 +284,12 @@ void loop() {
 	if (((currentMillis - lastPressMillis) > INACTIVETIMEOUT) && (queueHead != queueTail)) {
 		emptyQueue();
 	}
-
+	Watchdog.reset();
 }
 
 void readButtons()
 {
 	bool needToToggleLed = false;
-
 
   for (int i = 0; i < NUM_BUTTONS; i++)  {
     // Update the Bounce instance :
@@ -513,18 +510,21 @@ void restAll() {
 	jrk3.setTarget(THREE_DOWNFAST);
 	jrk4.setTarget(FOUR_DOWNFAST);
 	delay(FASTDURATION);
+	Watchdog.reset();
 	Serial.println("SLOW");
 	jrk1.setTarget(ONE_DOWNSLOW);
 	jrk2.setTarget(TWO_DOWNSLOW);
 	jrk3.setTarget(THREE_DOWNSLOW);
 	jrk4.setTarget(FOUR_DOWNSLOW);
 	delay(SLOWDURATION);
+	Watchdog.reset();
 	Serial.println("STOP");
 	jrk1.setTarget(STOP);
 	jrk2.setTarget(STOP);	
 	jrk3.setTarget(STOP);
 	jrk4.setTarget(STOP);
 	delay(STOPDURATION);
+	Watchdog.reset();
 }
 
 void upAll() {
@@ -535,18 +535,21 @@ void upAll() {
 	jrk3.setTarget(THREE_UPFAST);
 	jrk4.setTarget(FOUR_UPFAST);
 	delay(FASTDURATION);
+	Watchdog.reset();
 	Serial.println("SLOW");
 	jrk1.setTarget(ONE_UPSLOW);
 	jrk2.setTarget(TWO_UPSLOW);
 	jrk3.setTarget(THREE_UPSLOW);
 	jrk4.setTarget(FOUR_UPSLOW);
 	delay(SLOWDURATION);
+	Watchdog.reset();
 	Serial.println("STOP");
 	jrk1.setTarget(STOP);
 	jrk2.setTarget(STOP);	
 	jrk3.setTarget(STOP);
 	jrk4.setTarget(STOP);
 	delay(STOPDURATION);
+	Watchdog.reset();
 }
 
 
@@ -657,6 +660,7 @@ void checkButtonsForDelay(int d) {
 				emptyQueue();
 			}
 		delay(5);
+		Watchdog.reset();
 	}
 	return;
 }
